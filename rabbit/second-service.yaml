@@ -1,0 +1,37 @@
+# 📌 second-service.yaml파일
+# 서비스
+# 이름: coding404-queue
+# 셀렉터: queue
+
+# 포트: http
+# 내부포트: 15672
+# 외부접근포트: 30010
+
+# 포트: endpoint
+# 내부포트: 5672
+
+# 포트타입: NodePort
+
+
+# 파일작성이 끝나면 파일을 배포합니다.
+# 미니큐브 아이디를 확인하고 30010포트로 접속하면 됩니다.
+# 아이디: guest
+# 비밀번호: guest
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: coding404-queue
+spec:
+  selector:
+    app: webapp
+    release: "1"
+  ports:
+    - name: http
+      port: 15672
+      targetPort: 15672 #생략가능
+      nodePort: 30010
+    - name: endpoint #큐에 메세지 송수신하기위한 포트
+      port: 5672 #생략가능
+      targetPort: 5672
+  type: NodePort #외부접근용

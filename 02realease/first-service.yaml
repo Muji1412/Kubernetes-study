@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: coding404-webapp
+spec: 
+  selector:   
+    app: webapp
+    release: "0" # 릴리즈를 추가합니다. (아직은 기존에 작성되었던 pod로 연결됩니다)
+  # 여기에 릴리즈 버전을 바꿔서 버전을 바꾸는걸 할수 있음. 
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+
+  type: NodePort

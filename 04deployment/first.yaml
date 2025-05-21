@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: webapp #레플리카셋 이름
+
+spec:
+  minReadySeconds: 30 #pod가 준비상태가 된 후에 30초동안 기다려!
+  replicas: 2 #복제 템플릿의 개수                                                                                              
+  selector:
+    matchLabels:
+      app: webapp # 사용할 템플릿에 사용할 이름
+  
+  template: # 레플리카셋은 템플릿으로 생성, 템플릿 밑에는 pod 생성성
+    metadata:
+      labels:
+        app: webapp #템플릿 이름. (서비스의 셀렉터와 연결됨됨)
+
+    spec:
+      containers:
+       - name: webapp
+         image: coding404/k8s-coding404-webapp-react:v0-1

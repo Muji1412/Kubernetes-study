@@ -1,0 +1,17 @@
+# first파일와 first-service파일에 pod와 service를 만들고 배포하세요.
+# 📌 second.yaml파일
+# 파드
+# 이름: queue
+# 릴리즈: "1"
+# 이미지: coding404/k8s-coding404-queue:v1
+apiVersion: v1
+kind: Pod
+metadata:
+  name: queue
+  labels:
+    app: webapp
+    release: "1"
+spec:
+  containers:
+  - name: webapp
+    image: coding404/k8s-coding404-queue:v1
