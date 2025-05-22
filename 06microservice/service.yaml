@@ -1,0 +1,74 @@
+apiVersion: v1 # 큐에 대한 service
+kind: Service
+metadata:
+  name: coding404-queue # 이름
+
+spec:
+  selector:
+    app: queue
+
+  ports:
+    - name: http
+      port: 15672 # 서비스(ClusterIP)에서 노출되는 포트
+      targetPort: 15672 # 실제 컨테이너 내부에서 애플리케이션이 리스닝하는 포트
+      nodePort: 30010 # 클러스터 외부에서 접근할 수 있는 포트
+
+    - name: endpoint # 큐에 메시지를 송/수신 하기 위한 포트, 외부로 노출할 필요가 없기 때문에 nodePort는 빼도됩니다.
+      port: 5672
+      targetPort: 5672
+      # nodePort: 30020 
+
+  type:
+    NodePort
+---
+apiVersion: v1 # 포지션 트래커 서비스
+kind: Service
+metadata:
+  name: coding404-position-tracker 
+
+spec:
+  selector:
+    app: position-tracker
+
+  ports:
+    - name: http
+      port: 8282 # 앱포트
+      # nodePort: 30020 #외부 접근 포트 (NodePort일 경우 함께 개방)
+
+#  type: NodePort # 외부에 노출이 됩니다. ( 아이피:8282/getVehicle REST로 접근이 됩니다.)
+  type: ClusterIP 
+
+---
+apiVersion: v1 # 게이트웨이 서비스
+kind: Service
+metadata:
+  name: coding404-api-gateway #이름 중요
+
+spec:
+  selector:
+    app: api-gateway
+
+  ports:
+    - name: http
+      port: 8383 # 앱포트
+      #nodePort: 30030 #외부 접근 포트 (/api/test로 REST확인 가능함)
+
+  #type: NodePort # 외부에 노출이 됩니다.
+  type: ClusterIP
+
+--- # 웹앱 프론트엔드 서비스
+apiVersion: v1 # 게이트웨이 서비스
+kind: Service
+metadata:
+  name: coding404-webapp
+
+spec:
+  selector:
+    app: webapp
+
+  ports:
+    - name: http
+      port: 80 # 앱포트
+      nodePort: 30080 #외부 접근 포트
+
+  type: NodePort # 외부에 노출이 됩니다. (프론트엔드이므로 외부에서 접근이 가능해야 됩니다.)

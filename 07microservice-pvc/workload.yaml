@@ -1,0 +1,115 @@
+apiVersion: apps/v1 # 큐에 대한 롤링배포
+kind: Deployment 
+metadata:
+  name: queue
+spec:
+  selector:
+    matchLabels:
+      app: queue
+
+  replicas: 1 # 몇 개의 Pod 인스턴스를 유지할지
+  template: # Pod의 템플릿을 정의
+    metadata: 
+      labels: 
+        app: queue
+
+    spec:
+      containers:
+      - name: queue
+        image: coding404/k8s-coding404-queue:v1 # 큐 이미지
+
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: position-simulator
+spec:
+  selector:
+    matchLabels:
+      app: position-simulator
+
+  replicas: 1 # 몇 개의 Pod 인스턴스를 유지할지
+  template: # Pod의 템플릿을 정의
+    metadata: 
+      labels: 
+        app: position-simulator
+
+    spec:
+      containers:
+      - name: position-simulator
+        image: coding404/k8s-coding404-position-simulator:v1 # 시뮬레이터 이미지
+        imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+---
+apiVersion: apps/v1 # 파드에 대한 롤링배포 파일
+kind: Deployment 
+metadata:
+  name: position-tracker
+spec:
+  selector:
+    matchLabels:
+      app: position-tracker
+
+  replicas: 1 # 몇 개의 Pod 인스턴스를 유지할지
+  template: # Pod의 템플릿을 정의
+    metadata: 
+      labels: 
+        app: position-tracker
+
+    spec:
+      containers:
+      - name: position-tracker
+        image: coding404/k8s-coding404-position-tracker:v2 # 트래커 이미지
+        imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+
+--- # api게이트웨이
+apiVersion: apps/v1 # 파드에 대한 롤링배포 파일
+kind: Deployment 
+metadata:
+  name: api-gateway
+spec:
+  selector:
+    matchLabels:
+      app: api-gateway
+
+  replicas: 1 # 몇 개의 Pod 인스턴스를 유지할지
+  template: # Pod의 템플릿을 정의
+    metadata: 
+      labels: 
+        app: api-gateway
+
+    spec:
+      containers:
+      - name: api-gateway
+        image: coding404/k8s-coding404-api-gateway:v2
+        imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정 
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+--- # 웹앱 프론트엔드
+apiVersion: apps/v1 # 파드에 대한 롤링배포 파일
+kind: Deployment 
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+
+  replicas: 1 # 몇 개의 Pod 인스턴스를 유지할지
+  template: # Pod의 템플릿을 정의
+    metadata: 
+      labels: 
+        app: webapp
+
+    spec:
+      containers:
+      - name: webapp
+        image: coding404/k8s-coding404-webapp-react:v2
+        imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정
