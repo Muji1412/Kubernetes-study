@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolumeClaim  # ← 대문자로!
+metadata:
+  name: postgres-pvc
+spec:
+  storageClassName: mylocalstorage
+  resources:
+    requests:
+      storage: 20Gi
+  accessModes:
+    - ReadWriteOnce  # ← PV와 맞춤
+
+---
+apiVersion: v1
+kind: PersistentVolume  # ← 대문자로!
+metadata:
+  name: local-storage
+spec:
+  storageClassName: mylocalstorage
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce  # ← PVC와 맞춤
+  hostPath:
+    path: /mnt/some/new/mydata
+    type: DirectoryOrCreate
