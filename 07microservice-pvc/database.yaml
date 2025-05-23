@@ -23,7 +23,7 @@ spec:
         - name: POSTGRES_DB
           value: "postgres"
         - name: PGDATA
-          value: "/var/lib/postgresql/data/pgdata"
+          value: "/var/lib/postgresql/data/pgdata/data" # 데이터 디렉토리를 하위 폴더로 변경
         resources: # <--- 이 부분을 추가합니다.
           requests:
             memory: "1Gi"
