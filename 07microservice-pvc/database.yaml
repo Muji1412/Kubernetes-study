@@ -24,6 +24,13 @@ spec:
           value: "postgres"
         - name: PGDATA
           value: "/var/lib/postgresql/data/pgdata"
+        resources: # <--- 이 부분을 추가합니다.
+          requests:
+            memory: "1Gi"
+            cpu: "500m" # 0.5 CPU 코어
+          limits:
+            memory: "2Gi"
+            cpu: "1" # 1 CPU 코어
         volumeMounts:
         - name: postgres-persistent-storage
           mountPath: /var/lib/postgresql/data/pgdata

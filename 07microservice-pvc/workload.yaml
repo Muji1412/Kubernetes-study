@@ -17,6 +17,13 @@ spec:
       containers:
       - name: queue
         image: coding404/k8s-coding404-queue:v1 # 큐 이미지
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
 
 
 ---
@@ -40,6 +47,13 @@ spec:
       - name: position-simulator
         image: coding404/k8s-coding404-position-simulator:v1 # 시뮬레이터 이미지
         imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
@@ -64,6 +78,13 @@ spec:
       - name: position-tracker
         image: coding404/k8s-coding404-position-tracker:v2 # 트래커 이미지
         imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
@@ -88,7 +109,14 @@ spec:
       containers:
       - name: api-gateway
         image: coding404/k8s-coding404-api-gateway:v2
-        imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정 
+        imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
@@ -113,3 +141,10 @@ spec:
       - name: webapp
         image: coding404/k8s-coding404-webapp-react:v2
         imagePullPolicy: Always  # 항상 새로운 이미지를 가져오도록 설정
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
