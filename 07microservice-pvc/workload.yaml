@@ -88,6 +88,12 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://coding404-postgres.default.svc.cluster.local:5432/postgres"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "postgres"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
 
 --- # api게이트웨이
 apiVersion: apps/v1 # 파드에 대한 롤링배포 파일
